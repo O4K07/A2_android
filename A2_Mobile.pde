@@ -1,3 +1,4 @@
+int PressedRow = -1,PressedCol = -1;
 int[][] board = {
     {5,3,0, 0,7,0, 0,0,0},
     {6,0,0, 1,9,5, 0,0,0},
@@ -46,6 +47,27 @@ void draw_numbers() {
         }
     }
 }
+void pressed() {
+    int size = width/9;
+    int c = mouseX / size;
+    int r = mouseY / size;
+    if (r>=0 && r<9 && c>=0 && c<9) {
+        PressedRow = r;
+        PressedCol = c;
+    }else{ 
+        PressedRow = -1;
+        PressedCol = -1;
+     }    
+}
+void highlight() {
+  int size = width/9;
+  if (PressedRow != -1 && PressedCol != -1) {
+    noFill();
+    stroke(0, 150, 255);
+    strokeWeight(4);
+    rect(PressedCol * size, PressedRow * size, size, size);
+  }
+}
 void setup() {
     fullScreen();
     draw_grid();
@@ -56,4 +78,6 @@ void draw(){
      background(255);
      draw_grid();
      draw_numbers();
+     pressed();
+     highlight();
 }
