@@ -1,4 +1,5 @@
 int PressedRow = -1,PressedCol = -1;
+int size;
 int[][] board = {
     {5,3,0, 0,7,0, 0,0,0},
     {6,0,0, 1,9,5, 0,0,0},
@@ -13,8 +14,8 @@ int[][] board = {
     {0,0,0, 0,8,0, 0,7,9}
 };
 
+
 void draw_grid() {
-    int size = width/9;
     for(int i = 0;i <= 9;i++) {
         int x = i*size;
         if (i%3 == 0) {
@@ -37,7 +38,6 @@ void draw_grid() {
     }
 }
 void draw_numbers() {
-    int size = width/9;
     for (int i = 0; i < 9; i++) {
         for (int j = 0; j < 9; j++) {
             if (board[i][j] != 0) {
@@ -47,8 +47,7 @@ void draw_numbers() {
         }
     }
 }
-void pressed() {
-    int size = width/9;
+void mousePressed() {
     int c = mouseX / size;
     int r = mouseY / size;
     if (r>=0 && r<9 && c>=0 && c<9) {
@@ -60,7 +59,6 @@ void pressed() {
      }    
 }
 void highlight() {
-  int size = width/9;
   if (PressedRow != -1 && PressedCol != -1) {
     noFill();
     stroke(0, 150, 255);
@@ -68,8 +66,35 @@ void highlight() {
     rect(PressedCol * size, PressedRow * size, size, size);
   }
 }
+void draw_numpad() {
+    stroke(0);
+    strokeWeight(2);
+    int top = size*9+400;
+    for (int i=0; i<=3; i++) {
+        int x = size*3+(i*size);
+        line(x, top, x, top + 3*size);
+    }
+
+    for (int j=0; j<=3; j++) {
+        int y = top + j*size;
+        line(size*3, y, size*6, y);
+    }
+
+    fill(0);
+    textSize(size*0.5);
+    int num = 1;
+    for (int r=0; r<3; r++) {
+        for (int c=0; c<3; c++) {
+            int x = size*(3+c) + size/2;
+            int y = top + r*size + size/2;
+            text(num, x, y);
+            num++;
+        }
+    }
+}
 void setup() {
     fullScreen();
+    size = width/9;
     draw_grid();
     textAlign(CENTER, CENTER);
     textSize(width/20);
@@ -78,6 +103,6 @@ void draw(){
      background(255);
      draw_grid();
      draw_numbers();
-     pressed();
      highlight();
+     draw_numpad();
 }
