@@ -35,8 +35,25 @@ void draw_grid() {
         line(0, y, 9*size, y);
     }
 }
-
+void draw_numbers() {
+    int size = width/9;
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++) {
+            if (board[i][j] != 0) {
+                fill(0);
+                text(board[i][j], j*size + size/2, i*size + size/2);
+            }
+        }
+    }
+}
 void setup() {
     fullScreen();
     draw_grid();
+    textAlign(CENTER, CENTER);
+    textSize(width/20);
+}
+void draw(){
+     background(255);
+     draw_grid();
+     draw_numbers();
 }
