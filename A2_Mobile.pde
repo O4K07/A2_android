@@ -1,5 +1,6 @@
 int PressedRow = -1,PressedCol = -1;
 int size,top;
+int t = 1;
 int[][] board = {
     {5,3,0, 0,7,0, 0,0,0},
     {6,0,0, 1,9,5, 0,0,0},
@@ -40,9 +41,17 @@ void draw_grid() {
 void draw_numbers() {
     for (int i = 0; i < 9; i++) {
         for (int j = 0; j < 9; j++) {
-            if (board[i][j] != 0) {
+            if (board[i][j] != 0 && t==1) {
                 fill(0);
                 text(board[i][j], j*size + size/2, i*size + size/2);
+            }else if(t==0 && board[i][j] != 0){
+                if(i == PressedRow && j == PressedCol){
+                    fill(255,0,0);
+                    text(board[i][j], j*size + size/2, i*size + size/2);
+                }else{
+                    fill(0);
+                    text(board[i][j], j*size + size/2, i*size + size/2);
+                }
             }
         }
     }
@@ -52,12 +61,19 @@ void mousePressed() {
         PressedCol = mouseX / size;
         PressedRow = mouseY / size;
     } 
-    else if (PressedRow != -1 && PressedCol != -1 && board[PressedRow][PressedCol] == 0) {
+    else if (PressedRow != -1 && PressedCol != -1) {
         if (mouseX > 3 * size && mouseX < 6 * size && mouseY > top && mouseY < top + 3 * size) {
             int col = (mouseX - 3 * size) / size;
             int row = (mouseY - top) / size;
             int num = row * 3 + col + 1;
-            board[PressedRow][PressedCol] = num;
+            if(is_valid(row,col,num)){
+                board[PressedRow][PressedCol] = num;
+                t=1;
+            }
+            else{
+                board[PressedRow][PressedCol] = num;
+                t=0;
+            }
         }
     }
 }
@@ -93,6 +109,30 @@ void draw_numpad() {
             num++;
         }
     }
+}
+boolean is_valid(int row, int col, int num) {
+    for (int j = 0; j < 9; j++) {
+        if (board[row][j] == num) {
+          return false;
+        }
+    }
+
+    for (int i = 0; i < 9; i++) {
+        if (board[i][col] == num) {
+           return false;
+        }
+    }
+
+    int boxRow = row - row % 3;
+    int boxCol = col - col % 3;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+          if (board[boxRow + i][boxCol + j] == num) {
+            return false;
+          }
+        }
+    }
+    return true;
 }
 void setup() {
     fullScreen();
