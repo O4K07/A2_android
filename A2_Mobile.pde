@@ -74,13 +74,12 @@ void mousePressed() {
             int num = row * 3 + col + 1;
             if (num == 11 && truth_value[PressedRow][PressedCol] != 2) {
                 board[PressedRow][PressedCol] = 0;
-                truth_value[PressedRow][PressedCol] = 1; 
-                return; 
+                truth_value[PressedRow][PressedCol] = 1;  
             }
             if (num >= 1 && num <= 9) {
                 is_valid(PressedRow, PressedCol, num);
             }
-            if(truth_value[PressedRow][PressedCol] != 2){
+            if(truth_value[PressedRow][PressedCol] != 2 && num <= 9){
                 board[PressedRow][PressedCol] = num;
             }
         }
