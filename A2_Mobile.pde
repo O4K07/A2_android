@@ -9,8 +9,9 @@ void loadfile(String[] fileLines) {
         String line = fileLines[i];
         
         for(int j = 0; j < 9; j++) {
-            char num = line.charAt(j);
-            board[i][j] = int(num)-48;
+            char digit = line.charAt(j);
+            int num = int(digit)-48;
+            board[i][j] = num;
             if(num != 0) truth_value[i][j] = 2;
             else truth_value[i][j] = 1;
         }
@@ -69,8 +70,9 @@ void mousePressed() {
             int row = (mouseY - top) / size;
             int num = row * 3 + col + 1;
             is_valid(PressedRow,PressedCol,num);
-            board[PressedRow][PressedCol] = num;
-            
+            if(truth_value[PressedRow][PressedCol] != 2){
+                board[PressedRow][PressedCol] = num;
+            }
         }
     }
 }
@@ -106,29 +108,31 @@ void draw_numpad() {
     }
 }
 void is_valid(int row, int col, int num) {
-    truth_value[PressedRow][PressedCol] = 1;
+    if(truth_value[PressedRow][PressedCol] != 2){
+        truth_value[PressedRow][PressedCol] = 1;
+        
+        for (int j = 0; j < 9; j++) {
+            if (board[row][j] == num && j != PressedCol) {
+                truth_value[row][col] = 0;
+            }
+        }
     
-    for (int j = 0; j < 9; j++) {
-        if (board[row][j] == num && j != PressedCol) {
-            truth_value[row][col] = 0;
+        for (int i = 0; i < 9; i++) {
+            if (board[i][col] == num && i != PressedRow) {
+                 truth_value[row][col] = 0;
+            }
         }
-    }
-
-    for (int i = 0; i < 9; i++) {
-        if (board[i][col] == num && i != PressedRow) {
-             truth_value[row][col] = 0;
+    
+        int boxRow = row - row % 3;
+        int boxCol = col - col % 3;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+              if (board[boxRow + i][boxCol + j] == num) {
+                truth_value[row][col] = 0;
+              }
+            }
         }
-    }
-
-    int boxRow = row - row % 3;
-    int boxCol = col - col % 3;
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-          if (board[boxRow + i][boxCol + j] == num) {
-            truth_value[row][col] = 0;
-          }
-        }
-    }
+  }
 }
 void setup() {
     fullScreen();
