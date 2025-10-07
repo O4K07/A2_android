@@ -68,11 +68,18 @@ void mousePressed() {
         PressedRow = mouseY / size;
     } 
     else if (PressedRow != -1 && PressedCol != -1) {
-        if (mouseX > 3 * size && mouseX < 6 * size && mouseY > top && mouseY < top + 3 * size) {
+        if (mouseX > 3 * size && mouseX < 6 * size && mouseY > top && mouseY < top + 4 * size) {
             int col = (mouseX - 3 * size) / size;
             int row = (mouseY - top) / size;
             int num = row * 3 + col + 1;
-            is_valid(PressedRow,PressedCol,num);
+            if (num == 11 && truth_value[PressedRow][PressedCol] != 2) {
+                board[PressedRow][PressedCol] = 0;
+                truth_value[PressedRow][PressedCol] = 1; 
+                return; 
+            }
+            if (num >= 1 && num <= 9) {
+                is_valid(PressedRow, PressedCol, num);
+            }
             if(truth_value[PressedRow][PressedCol] != 2){
                 board[PressedRow][PressedCol] = num;
             }
@@ -90,10 +97,10 @@ void draw_numpad() {
     strokeWeight(2);
     for (int i=0; i<=3; i++) {
         int x = size*3+(i*size);
-        line(x, top, x, top + 3*size);
+        line(x, top, x, top + 4*size);
     }
 
-    for (int j=0; j<=3; j++) {
+    for (int j=0; j<=4; j++) {
         int y = top + j*size;
         line(size*3, y, size*6, y);
     }
@@ -101,11 +108,15 @@ void draw_numpad() {
     fill(0);
     textSize(size*0.5);
     int num = 1;
-    for (int r=0; r<3; r++) {
+    for (int r=0; r<4; r++) {
         for (int c=0; c<3; c++) {
             int x = size*(3+c) + size/2;
             int y = top + r*size + size/2;
-            text(num, x, y);
+            if (num <= 9) {
+                text(num, x, y);
+            } else if (num == 11) { 
+                text("X", x, y);
+            }
             num++;
         }
     }
