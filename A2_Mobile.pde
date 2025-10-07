@@ -1,7 +1,7 @@
 int PressedRow = -1,PressedCol = -1;
 int size,top;
-int t = 1;
 int[][] board = new int[9][9];
+int[][] truth_value = new int[9][9];
 
 void loadfile(String[] fileLines) {
     for(int i = 0; i < 9; i++) {
@@ -9,9 +9,10 @@ void loadfile(String[] fileLines) {
         String line = fileLines[i];
         
         for(int j = 0; j < 9; j++) {
-
             char num = line.charAt(j);
             board[i][j] = int(num)-48;
+            if(num != 0) truth_value[i][j] = 2;
+            else truth_value[i][j] = 1;
         }
     }
 }
@@ -42,17 +43,17 @@ void draw_grid() {
 void draw_numbers() {
     for (int i = 0; i < 9; i++) {
         for (int j = 0; j < 9; j++) {
-            if (board[i][j] != 0 && t==1) {
+            if (board[i][j] != 0 && truth_value[i][j]==2) {
                 fill(0);
                 text(board[i][j], j*size + size/2, i*size + size/2);
-            }else if(t==0 && board[i][j] != 0){
-                if(i == PressedRow && j == PressedCol){
-                    fill(255,0,0);
-                    text(board[i][j], j*size + size/2, i*size + size/2);
-                }else{
-                    fill(0);
-                    text(board[i][j], j*size + size/2, i*size + size/2);
-                }
+            }            
+            if (board[i][j] != 0 && truth_value[i][j]==1) {
+                fill(0);
+                text(board[i][j], j*size + size/2, i*size + size/2);
+            }else if(truth_value[i][j]==0 && board[i][j] != 0){               
+                fill(255,0,0);
+                text(board[i][j], j*size + size/2, i*size + size/2);
+                
             }
         }
     }
@@ -67,14 +68,9 @@ void mousePressed() {
             int col = (mouseX - 3 * size) / size;
             int row = (mouseY - top) / size;
             int num = row * 3 + col + 1;
-            if(is_valid(row,col,num)){
-                board[PressedRow][PressedCol] = num;
-                t=1;
-            }
-            else{
-                board[PressedRow][PressedCol] = num;
-                t=0;
-            }
+            is_valid(PressedRow,PressedCol,num);
+            board[PressedRow][PressedCol] = num;
+            
         }
     }
 }
@@ -109,16 +105,18 @@ void draw_numpad() {
         }
     }
 }
-boolean is_valid(int row, int col, int num) {
+void is_valid(int row, int col, int num) {
+    truth_value[PressedRow][PressedCol] = 1;
+    
     for (int j = 0; j < 9; j++) {
-        if (board[row][j] == num) {
-          return false;
+        if (board[row][j] == num && j != PressedCol) {
+            truth_value[row][col] = 0;
         }
     }
 
     for (int i = 0; i < 9; i++) {
-        if (board[i][col] == num) {
-           return false;
+        if (board[i][col] == num && i != PressedRow) {
+             truth_value[row][col] = 0;
         }
     }
 
@@ -127,11 +125,10 @@ boolean is_valid(int row, int col, int num) {
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
           if (board[boxRow + i][boxCol + j] == num) {
-            return false;
+            truth_value[row][col] = 0;
           }
         }
     }
-    return true;
 }
 void setup() {
     fullScreen();
