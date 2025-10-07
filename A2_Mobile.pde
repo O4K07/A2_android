@@ -1,19 +1,20 @@
 int PressedRow = -1,PressedCol = -1;
 int size,top;
 int t = 1;
-int[][] board = {
-    {5,3,0, 0,7,0, 0,0,0},
-    {6,0,0, 1,9,5, 0,0,0},
-    {0,9,8, 0,0,0, 0,6,0},
+int[][] board = new int[9][9];
 
-    {8,0,0, 0,6,0, 0,0,3},
-    {4,0,0, 8,0,3, 0,0,1},
-    {7,0,0, 0,2,0, 0,0,6},
+void loadfile(String[] fileLines) {
+    for(int i = 0; i < 9; i++) {
+                       
+        String line = fileLines[i];
+        
+        for(int j = 0; j < 9; j++) {
 
-    {0,6,0, 0,0,0, 2,8,0},
-    {0,0,0, 4,1,9, 0,0,5},
-    {0,0,0, 0,8,0, 0,7,9}
-};
+            char num = line.charAt(j);
+            board[i][j] = int(num)-48;
+        }
+    }
+}
 
 
 void draw_grid() {
@@ -136,6 +137,7 @@ boolean is_valid(int row, int col, int num) {
 }
 void setup() {
     fullScreen();
+    loadfile(loadStrings("broad.txt"));
     size = width/9;
     top = size*9+400;
     draw_grid();
