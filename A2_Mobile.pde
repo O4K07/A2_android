@@ -45,10 +45,13 @@ void draw_numbers() {
     for (int i = 0; i < 9; i++) {
         for (int j = 0; j < 9; j++) {
             if (board[i][j] != 0 && truth_value[i][j]==2) {
+                fill(230,230,230);
+                rect(j*size, i*size, size, size);
                 fill(0);
                 text(board[i][j], j*size + size/2, i*size + size/2);
+                
             }            
-            if (board[i][j] != 0 && truth_value[i][j]==1) {
+            else if (board[i][j] != 0 && truth_value[i][j]==1) {
                 fill(0);
                 text(board[i][j], j*size + size/2, i*size + size/2);
             }else if(truth_value[i][j]==0 && board[i][j] != 0){               
@@ -77,10 +80,10 @@ void mousePressed() {
     }
 }
 void highlight() {
-  if (PressedRow != -1 && PressedCol != -1) {
-    fill(0, 230, 0);
-    rect(PressedCol * size, PressedRow * size, size, size);
-  }
+    if (PressedRow != -1 && PressedCol != -1) {
+      fill(0, 230, 0);
+      rect(PressedCol * size, PressedRow * size, size, size);
+    }
 }
 void draw_numpad() {
     stroke(0);
