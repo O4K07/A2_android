@@ -80,9 +80,7 @@ void mousePressed() {
 }
 void highlight() {
   if (PressedRow != -1 && PressedCol != -1) {
-    noFill();
-    stroke(0, 150, 255);
-    strokeWeight(4);
+    fill(0, 230, 0);
     rect(PressedCol * size, PressedRow * size, size, size);
   }
 }
@@ -147,7 +145,7 @@ void setup() {
 void draw(){
      background(255);
      draw_grid();
-     draw_numbers();
      highlight();
+     draw_numbers();
      draw_numpad();
 }
