@@ -3,7 +3,8 @@ int size,top;
 int[][] board = new int[9][9];
 int[][] truth_value = new int[9][9];
 
-void loadfile(String[] fileLines) {
+void load_sudoku(String filenames) {
+    String[] fileLines = loadStrings(filenames);
     for(int i = 0; i < 9; i++) {
                        
         String line = fileLines[i];
@@ -19,7 +20,7 @@ void loadfile(String[] fileLines) {
 }
 
 
-void draw_grid() {
+void draw_table() {
     for(int i = 0;i <= 9;i++) {
         int x = i*size;
         if (i%3 == 0) {
@@ -41,7 +42,7 @@ void draw_grid() {
         line(0, y, 9*size, y);
     }
 }
-void draw_numbers() {
+void draw_num() {
     for (int i = 0; i < 9; i++) {
         for (int j = 0; j < 9; j++) {
             if (board[i][j] != 0 && truth_value[i][j]==2) {
@@ -77,7 +78,7 @@ void mousePressed() {
                 truth_value[PressedRow][PressedCol] = 1;  
             }
             if (num >= 1 && num <= 9) {
-                is_valid(PressedRow, PressedCol, num);
+                checkNum(PressedRow, PressedCol, num);
             }
             if(truth_value[PressedRow][PressedCol] != 2 && num <= 9){
                 board[PressedRow][PressedCol] = num;
@@ -120,7 +121,7 @@ void draw_numpad() {
         }
     }
 }
-void is_valid(int row, int col, int num) {
+void checkNum(int row, int col, int num) {
     if(truth_value[PressedRow][PressedCol] != 2){
         truth_value[PressedRow][PressedCol] = 1;
         
@@ -149,17 +150,17 @@ void is_valid(int row, int col, int num) {
 }
 void setup() {
     fullScreen();
-    loadfile(loadStrings("broad.txt"));
+    load_sudoku("broad.txt");
     size = width/9;
     top = size*9+400;
-    draw_grid();
+    draw_table();
     textAlign(CENTER, CENTER);
     textSize(width/20);
 }
 void draw(){
      background(255);
-     draw_grid();
+     draw_table();
      highlight();
-     draw_numbers();
+     draw_num();
      draw_numpad();
 }
