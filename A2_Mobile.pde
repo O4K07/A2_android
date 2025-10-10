@@ -18,6 +18,10 @@ void load_sudoku(String filename) {
         for(int j = 0; j < 9; j++) {
             char digit = line.charAt(j);
             int num = int(digit)-48;
+            if(num<0 || num>9){
+                errorMessage = "Index error";
+                return;
+            }
             board[i][j] = num;
             if(num != 0) truth_value[i][j] = 2;
             else truth_value[i][j] = 1;
@@ -159,7 +163,7 @@ void checkNum(int row, int col, int num) {
 }
 void setup() {
     fullScreen();
-    load_sudoku("board.pdf");
+    load_sudoku("board.txt");
     size = width/9;
     top = size*9+400;
     draw_table();
