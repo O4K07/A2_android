@@ -179,7 +179,7 @@ void setup() {
     textSize(width/20);
 }
 void draw(){
-     background(200);
+     background(255);
      if(errorMessage != null){
         fill(200,0,0);
         textAlign(CENTER);
@@ -191,4 +191,22 @@ void draw(){
      highlight();
      draw_num();
      draw_numpad();
+     
+     int count = 0;
+     int fixed_count = 0;
+     for(int i=0;i<9;i++){
+        for(int j=0;j<9;j++){
+            if(board[i][j] != 0 && truth_value[i][j] == 1){
+                count += 1;
+            }
+            if(truth_value[i][j] == 2){
+                fixed_count += 1;
+            }
+        }
+     }
+      
+    int total = count + fixed_count;
+    if(total == 81){
+        endgame();
+    }
 }
