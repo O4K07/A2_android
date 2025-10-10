@@ -2,13 +2,19 @@ int PressedRow = -1,PressedCol = -1;
 int size,top;
 int[][] board = new int[9][9];
 int[][] truth_value = new int[9][9];
+String errorMessage = null;
 
-void load_sudoku(String filenames) {
-    String[] fileLines = loadStrings(filenames);
+void load_sudoku(String filename) {
+    int len = filename.length();
+    if(!filename.substring(len - 4).equals(".txt")){
+        errorMessage = "Format error";
+        return;
+    }
+    String[] fileLines = loadStrings(filename);
     for(int i = 0; i < 9; i++) {
-                       
+
         String line = fileLines[i];
-        
+
         for(int j = 0; j < 9; j++) {
             char digit = line.charAt(j);
             int num = int(digit)-48;
@@ -17,6 +23,7 @@ void load_sudoku(String filenames) {
             else truth_value[i][j] = 1;
         }
     }
+    
 }
 
 
@@ -50,7 +57,7 @@ void draw_num() {
                 rect(j*size, i*size, size, size);
                 fill(0);
                 text(board[i][j], j*size + size/2, i*size + size/2);
-                
+
             }            
             else if (board[i][j] != 0 && truth_value[i][j]==1) {
                 fill(0);
@@ -58,7 +65,7 @@ void draw_num() {
             }else if(truth_value[i][j]==0 && board[i][j] != 0){               
                 fill(255,0,0);
                 text(board[i][j], j*size + size/2, i*size + size/2);
-                
+
             }
         }
     }
@@ -75,11 +82,13 @@ void mousePressed() {
             int num = row * 3 + col + 1;
             if (num == 11 && truth_value[PressedRow][PressedCol] != 2) {
                 board[PressedRow][PressedCol] = 0;
+                
                 truth_value[PressedRow][PressedCol] = 1;  
             }
             if (num >= 1 && num <= 9) {
                 checkNum(PressedRow, PressedCol, num);
             }
+            
             if(truth_value[PressedRow][PressedCol] != 2 && num <= 9){
                 board[PressedRow][PressedCol] = num;
             }
@@ -124,19 +133,19 @@ void draw_numpad() {
 void checkNum(int row, int col, int num) {
     if(truth_value[PressedRow][PressedCol] != 2){
         truth_value[PressedRow][PressedCol] = 1;
-        
+
         for (int j = 0; j < 9; j++) {
             if (board[row][j] == num && j != PressedCol) {
                 truth_value[row][col] = 0;
             }
         }
-    
+
         for (int i = 0; i < 9; i++) {
             if (board[i][col] == num && i != PressedRow) {
                  truth_value[row][col] = 0;
             }
         }
-    
+
         int boxRow = row - row % 3;
         int boxCol = col - col % 3;
         for (int i = 0; i < 3; i++) {
@@ -150,7 +159,7 @@ void checkNum(int row, int col, int num) {
 }
 void setup() {
     fullScreen();
-    load_sudoku("broad.txt");
+    load_sudoku("board.pdf");
     size = width/9;
     top = size*9+400;
     draw_table();
@@ -158,7 +167,14 @@ void setup() {
     textSize(width/20);
 }
 void draw(){
-     background(255);
+     background(200);
+     if(errorMessage != null){
+         fill(200,0,0);
+        textAlign(CENTER);
+        textSize(100);
+        text(errorMessage,width/2,height/2);
+        return;
+     }
      draw_table();
      highlight();
      draw_num();
