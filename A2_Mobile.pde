@@ -186,6 +186,7 @@ void checkNum(int row, int col, int num) {
   }
 }
 void endgame(){
+    background(255);
     fill(200,0,0);
     textAlign(CENTER);
     textSize(100);
@@ -233,5 +234,6 @@ void draw(){
     int total = count + fixed_count;
     if(total == 81){
         endgame();
+        return;
     }
 }
