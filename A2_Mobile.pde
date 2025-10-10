@@ -1,16 +1,21 @@
 int PressedRow = -1,PressedCol = -1;
-int size,top;
+int size,top;//cell size and top of numpad
 int[][] board = new int[9][9];
-int[][] truth_value = new int[9][9];
-String errorMessage = null;
+int[][] truth_value = new int[9][9];//2D array for check input numbers or loaded numbers
+String errorMessage = null;//message show when error
 
+//load numbers from textfile
 void load_sudoku(String filename) {
     int len = filename.length();
+    
+    //check file format
     if(!filename.substring(len - 4).equals(".txt")){
         errorMessage = "Format error";
         return;
     }
+    
     String[] fileLines = loadStrings(filename);
+    
     for(int i = 0; i < 9; i++) {
 
         String line = fileLines[i];
@@ -18,13 +23,15 @@ void load_sudoku(String filename) {
         for(int j = 0; j < 9; j++) {
             char digit = line.charAt(j);
             int num = int(digit)-48;
+            
+            //check index in file
             if(num<0 || num>9){
                 errorMessage = "Index error";
                 return;
             }
             board[i][j] = num;
-            if(num != 0) truth_value[i][j] = 2;
-            else truth_value[i][j] = 1;
+            if(num != 0) truth_value[i][j] = 2;//2 for loaded numbers
+            else truth_value[i][j] = 1;//1 for cell that you can input number
         }
     }
     
@@ -56,17 +63,21 @@ void draw_table() {
 void draw_num() {
     for (int i = 0; i < 9; i++) {
         for (int j = 0; j < 9; j++) {
+            //fill grey in loaded cell
             if (board[i][j] != 0 && truth_value[i][j]==2) {
                 fill(230,230,230);
                 rect(j*size, i*size, size, size);
                 fill(0);
                 text(board[i][j], j*size + size/2, i*size + size/2);
 
-            }            
+            }
+            //void cell
             else if (board[i][j] != 0 && truth_value[i][j]==1) {
                 fill(0);
                 text(board[i][j], j*size + size/2, i*size + size/2);
-            }else if(truth_value[i][j]==0 && board[i][j] != 0){               
+            }
+            //red number when incorrect
+            else if(truth_value[i][j]==0 && board[i][j] != 0){               
                 fill(255,0,0);
                 text(board[i][j], j*size + size/2, i*size + size/2);
 
@@ -75,36 +86,45 @@ void draw_num() {
     }
 }
 void mousePressed() {
+    //check that you press in board so pressedRow/Colum cant out side board
     if (mouseX >= 0 && mouseX < 9 * size && mouseY >= 0 && mouseY < 9 * size) {
         PressedCol = mouseX / size;
         PressedRow = mouseY / size;
     } 
+    
+    //check if you have pressed
     else if (PressedRow != -1 && PressedCol != -1) {
+        //check that you press on numpad
         if (mouseX > 3 * size && mouseX < 6 * size && mouseY > top && mouseY < top + 4 * size) {
             int col = (mouseX - 3 * size) / size;
             int row = (mouseY - top) / size;
             int num = row * 3 + col + 1;
+            
+            //delete botton
             if (num == 11 && truth_value[PressedRow][PressedCol] != 2) {
                 board[PressedRow][PressedCol] = 0;
                 
                 truth_value[PressedRow][PressedCol] = 1;  
             }
+            //1-9 botton
             if (num >= 1 && num <= 9) {
-                checkNum(PressedRow, PressedCol, num);
+                checkNum(PressedRow, PressedCol, num);//check is it correct
             }
-            
+            //place inputed number on board if it not loaded number and not more than 9
             if(truth_value[PressedRow][PressedCol] != 2 && num <= 9){
                 board[PressedRow][PressedCol] = num;
             }
         }
     }
 }
+//highlight pressed cell
 void highlight() {
     if (PressedRow != -1 && PressedCol != -1) {
       fill(0, 230, 0);
       rect(PressedCol * size, PressedRow * size, size, size);
     }
 }
+
 void draw_numpad() {
     stroke(0);
     strokeWeight(2);
@@ -135,21 +155,25 @@ void draw_numpad() {
     }
 }
 void checkNum(int row, int col, int num) {
+    //check it not loaded number
     if(truth_value[PressedRow][PressedCol] != 2){
         truth_value[PressedRow][PressedCol] = 1;
-
+        
+        //check column
         for (int j = 0; j < 9; j++) {
             if (board[row][j] == num && j != PressedCol) {
                 truth_value[row][col] = 0;
             }
         }
-
+        
+        //check row
         for (int i = 0; i < 9; i++) {
             if (board[i][col] == num && i != PressedRow) {
                  truth_value[row][col] = 0;
             }
         }
-
+        
+        //check in box
         int boxRow = row - row % 3;
         int boxCol = col - col % 3;
         for (int i = 0; i < 3; i++) {
@@ -180,6 +204,7 @@ void setup() {
 }
 void draw(){
      background(255);
+     //show if it have error
      if(errorMessage != null){
         fill(200,0,0);
         textAlign(CENTER);
