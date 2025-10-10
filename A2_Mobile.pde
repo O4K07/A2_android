@@ -161,6 +161,14 @@ void checkNum(int row, int col, int num) {
         }
   }
 }
+void endgame(){
+    fill(200,0,0);
+    textAlign(CENTER);
+    textSize(100);
+    text("End!",width/2,height/2);
+    return;   
+
+}
 void setup() {
     fullScreen();
     load_sudoku("board.txt");
@@ -173,7 +181,7 @@ void setup() {
 void draw(){
      background(200);
      if(errorMessage != null){
-         fill(200,0,0);
+        fill(200,0,0);
         textAlign(CENTER);
         textSize(100);
         text(errorMessage,width/2,height/2);
